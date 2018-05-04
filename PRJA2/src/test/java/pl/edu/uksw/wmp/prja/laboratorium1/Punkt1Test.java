@@ -18,11 +18,11 @@ public class Punkt1Test extends TestBase {
     public void iloscKubkowIstnieje() throws ClassNotFoundException {
         try {
             Class c = Class.forName("pl.edu.uksw.wmp.prja.laboratorium2.Automat");
-            Field f = c.getDeclaredField("iloscKubkow");
+            Field f = c.getDeclaredField("amountOfCups");
             assertTrue("Zły modyfikator widoczności", 
                        (Modifier.PUBLIC & f.getModifiers()) == 0);
         } catch (NoSuchFieldException ex) {
-            fail("Nie ma pola iloscKubkow");
+            fail("Nie ma pola amountOfCups");
         }
     }
     
@@ -30,12 +30,12 @@ public class Punkt1Test extends TestBase {
     public void iloscMleka() throws ClassNotFoundException {
         try {
             Class c = Class.forName("pl.edu.uksw.wmp.prja.laboratorium2.Automat");
-            Field f = c.getDeclaredField("iloscKubkow");
+            Field f = c.getDeclaredField("amountOfMilk");
             assertTrue("Zły modyfikator widoczności", 
                        (f.getModifiers() & Modifier.PUBLIC) == 0);
 
         } catch (NoSuchFieldException ex) {
-            fail("Nie ma pola iloscMleka");
+            fail("Nie ma pola amountOfMilk");
         }
     }
 

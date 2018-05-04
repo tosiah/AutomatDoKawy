@@ -13,14 +13,14 @@ public enum Moneta {
     
     GR5(0.05), GR10(0.1), GR50(0.5), ZL1(1), ZL2(2), ZL5(5);
     
-    Moneta(double wartosc) {
-        this.wartosc = wartosc;
+    Moneta(double value) {
+        this.value = value;
     }
     
-    public double getWartosc() {
-        return wartosc;
+    public double getValue() {
+        return value;
     }
 
-    private double wartosc;
+    private double value;
             
 }

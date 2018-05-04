@@ -1,11 +1,11 @@
 package pl.edu.uksw.wmp.prja.laboratorium1;
 
-import java.lang.reflect.Constructor;
+import org.junit.Test;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
@@ -19,16 +19,16 @@ public class Punkt3Test extends TestBase {
         Class c = Class.forName("pl.edu.uksw.wmp.prja.laboratorium2.Automat");
         Object o = c.newInstance();
         try {
-            Method dodajKubki = c.getMethod("dodajKubki", int.class);
+            Method dodajKubki = c.getMethod("addCups", int.class);
             assertFalse("Metoda powinna byc publiczna", (dodajKubki.getModifiers() & Modifier.PUBLIC) == 0);
             dodajKubki.invoke(o, 100);
-            assertEquals(110, getFieldValue(o, "iloscKubkow"));
+            assertEquals(110, getFieldValue(o, "amountOfCups"));
             dodajKubki.invoke(o, 100);
-            assertEquals(210, getFieldValue(o, "iloscKubkow"));
+            assertEquals(210, getFieldValue(o, "amountOfCups"));
             dodajKubki.invoke(o, 1000);
-            assertEquals(1000, getFieldValue(o, "iloscKubkow"));
+            assertEquals(1000, getFieldValue(o, "amountOfCups"));
         } catch (NoSuchMethodException ex) {
-            fail("Brak prawidlowej metody dodajKubki");
+            fail("Brak prawidlowej metody addCups");
         } catch (SecurityException ex) {
             fail("" + ex.getCause());
         } catch (IllegalArgumentException ex) {
@@ -43,16 +43,16 @@ public class Punkt3Test extends TestBase {
         Class c = Class.forName("pl.edu.uksw.wmp.prja.laboratorium2.Automat");
         Object o = c.newInstance();
         try {
-            Method dodajMleko = c.getMethod("dodajMleko", double.class);
+            Method dodajMleko = c.getMethod("addMilk", double.class);
             assertFalse("Metoda powinna byc publiczna", (dodajMleko.getModifiers() & Modifier.PUBLIC) == 0);
             dodajMleko.invoke(o, 90.5);
-            assertEquals(190.5, getFieldValue(o, "iloscMleka"));
+            assertEquals(190.5, getFieldValue(o, "amountOfMilk"));
             dodajMleko.invoke(o, 0.5);
-            assertEquals(191.0, getFieldValue(o, "iloscMleka"));
+            assertEquals(191.0, getFieldValue(o, "amountOfMilk"));
             dodajMleko.invoke(o, 10);
-            assertEquals(200.0, getFieldValue(o, "iloscMleka"));
+            assertEquals(200.0, getFieldValue(o, "amountOfMilk"));
         } catch (NoSuchMethodException ex) {
-            fail("Brak prawidlowej metody dodajMleko");
+            fail("Brak prawidlowej metody addMilk");
         } catch (SecurityException ex) {
             fail("" + ex.getCause());
         } catch (IllegalArgumentException ex) {

@@ -1,14 +1,14 @@
 package pl.edu.uksw.wmp.prja.laboratorium1;
 
+import org.junit.Test;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -34,11 +34,11 @@ public class Punkt2Test extends TestBase {
             if(cc.getParameterTypes().length == 0) {
                 correct = true;
                 Object o = c.newInstance();
-                Field f = c.getDeclaredField("iloscKubkow");
+                Field f = c.getDeclaredField("amountOfCups");
                 f.setAccessible(true);
                 int value = ((Integer)f.get(o)).intValue();
                 assertEquals(10, value);
-                f = c.getDeclaredField("iloscMleka");
+                f = c.getDeclaredField("amountOfMilk");
                 f.setAccessible(true);                
                 assertEquals(100.0, ((Double)f.get(o)).doubleValue(), 0.000001);
             }
@@ -59,11 +59,11 @@ public class Punkt2Test extends TestBase {
                     int a1 = Math.abs(new Random().nextInt());
                     double a2 = Math.abs(new Random().nextDouble());
                     Object o = cc.newInstance(new Integer(a1), new Double(a2));
-                    assertEquals(a1, ((Integer)getFieldValue(o, "iloscKubkow")).intValue());
-                    assertEquals(a2, ((Double)getFieldValue(o, "iloscMleka")).doubleValue(), 0.000001);
+                    assertEquals(a1, ((Integer)getFieldValue(o, "amountOfCups")).intValue());
+                    assertEquals(a2, ((Double)getFieldValue(o, "amountOfMilk")).doubleValue(), 0.000001);
                     o = cc.newInstance(new Integer(-6), new Double(-10.0));
-                    assertEquals(0, ((Integer)getFieldValue(o, "iloscKubkow")).intValue());
-                    assertEquals(0.0, ((Double)getFieldValue(o, "iloscMleka")).doubleValue(), 0.000001);
+                    assertEquals(0, ((Integer)getFieldValue(o, "amountOfCups")).intValue());
+                    assertEquals(0.0, ((Double)getFieldValue(o, "amountOfMilk")).doubleValue(), 0.000001);
                     
                 }
             }

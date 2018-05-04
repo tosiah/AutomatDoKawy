@@ -6,200 +6,108 @@
 package pl.edu.uksw.wmp.prja.laboratorium2;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Automat {
-    private int iloscKubkow;
-    private double iloscMleka;
-    private Moneta[] kasaAutomatu = new Moneta[250];
+    private int amountOfCups;
+    private double amountOfMilk;
+    private Moneta[] coinsInAutomat = new Moneta[250];
+    private Map<RodzajKawy, CoffeeInformation> coffeeMenu = new HashMap<>();
 
 
+    //konstruktor
     public Automat() {
-        this.iloscKubkow = 10;
-        this.iloscMleka = 100;
-        arsenal();
+        this.amountOfCups = 10;
+        this.amountOfMilk = 100;
+        initCoins();
+        initCoffeeMenu();
     }
 
-    private void arsenal() {
-        int licznik = 0;
+    private void initCoffeeMenu() {
+        coffeeMenu.put(RodzajKawy.KAWA_CZARNA, new CoffeeInformation(1.60, 0.0));
+        coffeeMenu.put(RodzajKawy.KAWA_CZARNA_Z_CUKREM, new CoffeeInformation(1.60, 0.0));
+        coffeeMenu.put(RodzajKawy.KAWA_Z_MLEKIEM, new CoffeeInformation(1.80, 0.5));
+        coffeeMenu.put(RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM, new CoffeeInformation(1.80, 0.3));
+    }
+
+    //wypełnienie Automatu monetami - po 5 monet każdego nominału
+    private void initCoins() {
+        int nominalIteration = 0;
         for (Moneta nominal : Moneta.values()) {
 
-            for (int i = licznik; i < licznik + 5; i++) {
-                kasaAutomatu[i] = nominal;
+            for (int i = nominalIteration; i < nominalIteration + 5; i++) {
+                coinsInAutomat[i] = nominal;
             }
-            licznik += 5;
-        }
-
-
-    }
-
-    public Automat(int iloscKubkow, double iloscMleka) {
-        if (iloscKubkow < 0) {
-            iloscKubkow = 0;
-        }
-        if (iloscMleka < 0) {
-            iloscMleka = 0;
-        }
-
-        this.iloscKubkow = iloscKubkow;
-        this.iloscMleka = iloscMleka;
-        arsenal();
-    }
-
-    public void dodajKubki(int noweKubki) {
-        if (noweKubki > 0) {
-            iloscKubkow += noweKubki;
-        }
-        if (iloscKubkow > 1000) {
-            iloscKubkow = 1000;
+            nominalIteration += 5;
         }
     }
 
-    public void dodajMleko(double noweMleko) {
-        if (noweMleko > 0) {
-            iloscMleka += noweMleko;
+    //konstruktor
+    public Automat(int amountOfCups, double amountOfMilk) {
+        if (amountOfCups < 0) {
+            amountOfCups = 0;
         }
-        if (iloscMleka > 200) {
-            iloscMleka = 200;
+        if (amountOfMilk < 0) {
+            amountOfMilk = 0;
+        }
+
+        this.amountOfCups = amountOfCups;
+        this.amountOfMilk = amountOfMilk;
+        initCoins();
+    }
+
+    //dodawanie kubków
+    public void addCups(int cupsToAdd) {
+        if (cupsToAdd > 0) {
+            amountOfCups += cupsToAdd;
+        }
+        if (amountOfCups > 1000) {
+            amountOfCups = 1000;
         }
     }
 
-
-    public RodzajKawy podajKawe(RodzajKawy wybor) {
-        RodzajKawy wydanaKawa = null;
-        if (iloscKubkow >= 1) {
-            if (wybor == RodzajKawy.KAWA_Z_MLEKIEM && iloscMleka >= 0.5) {
-                iloscMleka -= 0.5;
-                iloscKubkow--;
-                wydanaKawa = RodzajKawy.KAWA_Z_MLEKIEM;
-            }
-            if (wybor == RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM && iloscMleka >= 0.3) {
-                iloscMleka -= 0.3;
-                iloscKubkow--;
-                wydanaKawa = RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM;
-            } else if (wybor != RodzajKawy.KAWA_Z_MLEKIEM && wybor != RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM) {
-                wydanaKawa = wybor;
-                iloscKubkow--;
-            }
-            System.out.println("Wydano: " + wydanaKawa);
-        } else {
-            System.out.println("Brak kubków");
+    //dodawanie mleka
+    public void addMilk(double milkToAdd) {
+        if (milkToAdd > 0) {
+            amountOfMilk += milkToAdd;
         }
-        return wydanaKawa;
-
+        if (amountOfMilk > 200) {
+            amountOfMilk = 200;
+        }
     }
 
-    public Moneta[] podajKawe(RodzajKawy wybor, Moneta[] wrzuconeMonety) {
-        double sumaMonet = 0;
-        double reszta = 0;
-        List<Moneta> monetyReszty = new ArrayList<>();
-        double koszt = 0;
-        int ile5 = 0;
-        int ile2 = 0;
-        int ile1 = 0;
-        int ile50gr = 0;
-        int ile10gr = 0;
-        int ile05gr = 0;
-
-        for (Moneta m : wrzuconeMonety) {
-            sumaMonet += m.getWartosc();
+    //sprawdzenie czy jest wystarczająco kubków i mleka
+    public RodzajKawy chooseCoffee(RodzajKawy choice) throws NotEnoughCupsException, NotSuchBeverageException, NotEnoughMilkException {
+        if (amountOfCups < 1) {
+            throw new NotEnoughCupsException();
         }
-        if (wybor == RodzajKawy.KAWA_CZARNA || wybor == RodzajKawy.KAWA_CZARNA_Z_CUKREM) {
-            koszt = 1.60;
-        }
-        if (wybor == RodzajKawy.KAWA_Z_MLEKIEM || wybor == RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM) {
-            koszt = 1.80;
+        if (!coffeeMenu.containsKey(choice)) {
+            throw new NotSuchBeverageException();
         }
 
-        if (podajKawe(wybor) == wybor) {
-
-            reszta = (sumaMonet*10 - koszt*10)/10;
-            if (reszta < 0) {
-                System.out.println("Wrzuciłeś za mało pieniędzy");
-            } else if (dodajMonety(wrzuconeMonety) && reszta == 0) {
-                podajKawe(wybor);
-
-            } else if (dodajMonety(wrzuconeMonety) && reszta > 0) {
-                for (Moneta nominal : zamienKolejnosc(Moneta.values())) {
-                    int ileMonetWydano = iloscWydanychMonet(reszta, nominal);
-                    reszta = reszta - (nominal.getWartosc() * ileMonetWydano);
-                    monetyReszty.addAll(Arrays.asList(wydajMonety(nominal, ileMonetWydano)));
-                }
-
-            } else {
-                return null;
-            }
+        double requiredAmountOfMilk = coffeeMenu.get(choice).getAmountOfMilk();
+        if (amountOfMilk < requiredAmountOfMilk) {
+            throw new NotEnoughMilkException();
         }
-        return monetyReszty.toArray(new Moneta[monetyReszty.size()]);
+        amountOfCups--;
+        amountOfMilk -= requiredAmountOfMilk;
+        return choice;
     }
 
-    public Moneta[] zamienKolejnosc(Moneta[] monety) {
-        Moneta[] odwrocone = new Moneta[monety.length];
-        for (int i = 0; i < monety.length; i++) {
-            odwrocone[i] = monety[monety.length - i - 1];
-        }
-        return odwrocone;
-    }
-
-    public int iloscWydanychMonet(double reszta, Moneta nominal) {
-        int maksymalnaIloscMonetDoWydania = (int) (reszta / nominal.getWartosc());
-        int iloscMonetWAutomacie = ileMonet(nominal, kasaAutomatu);
-        int ileMonetWydac = Math.min(iloscMonetWAutomacie, maksymalnaIloscMonetDoWydania);
-
-        return ileMonetWydac;
-    }
-
-    public Moneta[] wydajMonety(Moneta nominal, int ileMonetWydac) {
-        if (ileMonetWydac == 0) {
-            return new Moneta[]{};
-        }
-        Moneta[] wydaneMonety = new Moneta[ileMonetWydac];
-        for (int i = 0; i < ileMonetWydac; i++) {
-            kasaAutomatu[znajdzMonety(nominal, kasaAutomatu)[i]] = null;
-        }
-        Arrays.fill(wydaneMonety, nominal);
-        return wydaneMonety;
-    }
-
-    public int[] znajdzMonety(Moneta szukanyNominal, Moneta[] tablica) {
-        // Moneta nominal = null;
-        int[] tablicaIndeksow = new int[50];
-        int licznik = 0;
-        for (int i = 0; i < tablica.length; i++) {
-            if (tablica[i] == szukanyNominal) {//nominal zamiast tablica[i]
-                tablicaIndeksow[licznik] = i;
-                licznik++;
-            }
-        }
-        return tablicaIndeksow;
-    }
-
-    public int ileMonet(Moneta szukanyNominal, Moneta[] tablica) {
-        int ilosc = 0;
-        for (int i = 0; i < tablica.length; i++) {
-            if (tablica[i] == szukanyNominal) {
-                ilosc++;
-            }
-        }
-        return ilosc;
-    }
-
-    public boolean dodajMonety(Moneta[] wrzuconeMonety) {
-        Moneta[] kopia = new Moneta[kasaAutomatu.length];
+    //spawdzenie czy jest wystarczająco miejsca w automacie na wrzucone przez klienta monety
+    private boolean isEnoughSpace(Moneta[] clientCoins) {
+        Moneta[] coinsInAutomatCopy = new Moneta[coinsInAutomat.length];
         boolean wasSuccessful = true;
-        double suma = 0.0;
-        for (int i = 0; i < kasaAutomatu.length; i++) {
-            kopia[i] = kasaAutomatu[i];
+        for (int i = 0; i < coinsInAutomat.length; i++) {
+            coinsInAutomatCopy[i] = coinsInAutomat[i];
         }
 
-        for (int m = 0; m < wrzuconeMonety.length; m++) {
-            Moneta moneta = wrzuconeMonety[m];
-            if (ileMonet(moneta, kopia) < 50) {
-                for (int k = 0; k < kopia.length; k++) {
-                    if (kopia[k] == null) {
-                        kopia[k] = moneta;
+        for (int m = 0; m < clientCoins.length; m++) {
+            Moneta moneta = clientCoins[m];
+            if (countCoins(moneta, coinsInAutomatCopy) < 50) {
+                for (int k = 0; k < coinsInAutomatCopy.length; k++) {
+                    if (coinsInAutomatCopy[k] == null) {
+                        coinsInAutomatCopy[k] = moneta;
                         break;
                     }
                 }
@@ -210,23 +118,119 @@ public class Automat {
 
         }
         if (wasSuccessful) {
-            kasaAutomatu = kopia;
+            coinsInAutomat = coinsInAutomatCopy;
         } else {
             System.out.println("Przeładowany automat");
         }
         return wasSuccessful;
     }
 
-   /* public Moneta[] oproznij(Moneta[] kasaAutomatu){
+    //wyszukanie na jakich indeksach tablicy monet automatu znajduje się dany nominał
+    private int[] searchForCoins(Moneta nominal) {
+        int[] automatIndexesOfCoins = new int[50];
+        int coinIndex = 0;
+        for (int i = 0; i < coinsInAutomat.length; i++) {
+            if (coinsInAutomat[i] == nominal) {
+                automatIndexesOfCoins[coinIndex] = i;
+                coinIndex++;
+            }
+        }
+        return automatIndexesOfCoins;
+    }
+
+    //wydanie reszty (wydawane są monety konkretnego nominału)
+    private Moneta[] giveChange(Moneta nominal, int amountOfReturnCoins) {
+        if (amountOfReturnCoins == 0) {
+            return new Moneta[]{};
+        }
+        Moneta[] givenChange = new Moneta[amountOfReturnCoins];
+        for (int i = 0; i < amountOfReturnCoins; i++) {
+            coinsInAutomat[searchForCoins(nominal)[i]] = null;
+        }
+        Arrays.fill(givenChange, nominal);
+        return givenChange;
+    }
+
+    // zamówienie kawy, wydanie reszty
+    public Moneta[] orderCoffee(RodzajKawy choice, Moneta[] clientCoins) {
+        double clientCoinsSum = 0;
+        double clientChange;
+        List<Moneta> clientChangeCoins = new ArrayList<>();
+        double price = coffeeMenu.get(choice).getPrice();
+
+        for (Moneta m : clientCoins) {
+            clientCoinsSum += m.getValue();
+        }
+
+        try {
+            if (chooseCoffee(choice) == choice) {
+                clientChange = (clientCoinsSum * 10 - price * 10) / 10;
+                if (clientChange < 0) {
+                    System.out.println("Wrzuciłeś za mało pieniędzy");
+                } else if (isEnoughSpace(clientCoins) && clientChange == 0) {
+                    chooseCoffee(choice);
+
+                } else if (isEnoughSpace(clientCoins) && clientChange > 0) {
+                    for (Moneta nominal : reverseArrayOrder(Moneta.values())) {
+                        int amountOfReturnNominal = countAmountOfCoinsToReturn(clientChange, nominal);
+                        clientChange = clientChange - (nominal.getValue() * amountOfReturnNominal);
+                        clientChangeCoins.addAll(Arrays.asList(giveChange(nominal, amountOfReturnNominal)));
+                    }
+
+                } else {
+                    return null;
+                }
+            }
+            return clientChangeCoins.toArray(new Moneta[clientChangeCoins.size()]);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return clientCoins;
+        }
+
+    }
+
+    //zamiana kolejności pól emuma Monety
+    private Moneta[] reverseArrayOrder(Moneta[] nominals) {
+        Moneta[] reversedArray = new Moneta[nominals.length];
+        for (int i = 0; i < nominals.length; i++) {
+            reversedArray[i] = nominals[nominals.length - i - 1];
+        }
+        return reversedArray;
+    }
+
+    //ile monet konkretnego nominału wydać
+    private int countAmountOfCoinsToReturn(double change, Moneta nominal) {
+        int maxAmountOfCoinsToReturn = (int) (change / nominal.getValue());
+        int amountOfCoinsInAutomat = countCoins(nominal, coinsInAutomat);
+        int amountOfCoinsToReturn = Math.min(amountOfCoinsInAutomat, maxAmountOfCoinsToReturn);
+
+        return amountOfCoinsToReturn;
+    }
+
+
+    //ile monet konkretnego nominału jest w tablicy monet
+    private int countCoins(Moneta nominal, Moneta[] coinsInAutomat) {
+        int amountOfCoins = 0;
+        for (int i = 0; i < coinsInAutomat.length; i++) {
+            if (coinsInAutomat[i] == nominal) {
+                amountOfCoins++;
+            }
+        }
+        return amountOfCoins;
+    }
+
+    
+   /* public Moneta[] oproznij(Moneta[] coinsInAutomat){
         for(Moneta m: Moneta.values()){
 
         }
     }
     */
 
-    public void wypiszZawartoscKasyAutomatu() {
-        for (int i = 0; i < kasaAutomatu.length; i++) {
-            System.out.println(kasaAutomatu[i]);
+    //wypisz zawartość tablicy monet automatu
+    public void printCoinsOfAutomat() {
+        for (int i = 0; i < coinsInAutomat.length; i++) {
+            System.out.println(coinsInAutomat[i]);
         }
     }
 }
