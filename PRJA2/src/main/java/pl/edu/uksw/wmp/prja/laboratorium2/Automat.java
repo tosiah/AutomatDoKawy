@@ -14,6 +14,9 @@ public class Automat {
     private Moneta[] coinsInAutomat = new Moneta[250];
     private Map<RodzajKawy, CoffeeInformation> coffeeMenu = new HashMap<>();
 
+    public Moneta[] getCoinsInAutomat() {
+        return coinsInAutomat;
+    }
 
     //konstruktor
     public Automat() {

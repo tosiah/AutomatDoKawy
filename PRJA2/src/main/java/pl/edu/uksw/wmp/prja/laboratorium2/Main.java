@@ -6,10 +6,20 @@ package pl.edu.uksw.wmp.prja.laboratorium2;
 public class Main {
     public static void main(String[] args){
     Automat automat = new Automat();
-    Automat tchibo = new Automat(0, 200);
+
+
+   /* Automat tchibo = new Automat(0, 200);
+
+        try{
+            tchibo.orderCoffee(RodzajKawy.KAWA_CZARNA, new Moneta[]{Moneta.ZL2});
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+*/
     //automat.printCoinsOfAutomat();
     //tchibo.orderCoffee(RodzajKawy.KAWA_CZARNA);
-    Moneta[] reszta = automat.orderCoffee(RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM, new Moneta[] {Moneta.ZL2});
+   /* Moneta[] reszta = automat.orderCoffee(RodzajKawy.KAWA_Z_MLEKIEM_I_CUKREM, new Moneta[] {Moneta.ZL2});
     automat.printCoinsOfAutomat();
 
         System.out.println(wartoscMonet(reszta));
@@ -21,5 +31,6 @@ public class Main {
             sum += m.getValue();
         }
         return sum;
+    }*/
     }
 }
